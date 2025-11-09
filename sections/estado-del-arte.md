@@ -1,6 +1,6 @@
 La tecnología de **Síntesis de Voz** (Text-to-Speech) ha evolucionado drásticamente en los últimos años.
 
-Fundamentada en el gran avance de la **inteligencia artificial** en los últimos años.
+Fundamentada por el gran avance de la **inteligencia artificial** en los últimos años.
 
 
 ## Paradigma en Cascada
@@ -16,12 +16,12 @@ Fue uno de los primeros enfoques neuronales robustos. **Separa el proceso** en d
   <img src="img/Tacotron2.png" alt="Arquitectura Tacotron 2">
 
   <ol class="text-col">
-    <li><b>Texto de entrada:</b> El modelo recibe el texto (por ejemplo, una oración).</li>
+    <li><b>Texto de entrada:</b> El modelo recibe el texto.</li>
     <li><b>Codificador de texto:</b> Convierte cada carácter o fonema en una representación numérica (vector), que captura información lingüística como pronunciación o entonación.</li>
     <li><b>Atención:</b> Actúa como un “mapa” que decide qué parte del texto corresponde al sonido que se está generando en ese momento.</li>
     <li><b>Decodificador:</b> Genera fragmentos del sonido representados como espectrogramas mel. El decodificador genera el frame a frame. En cada paso, la salida anterior se usa como entrada para el siguiente paso</li>
     <li><b>Post-net:</b> Mejora la calidad del espectrograma corrigiendo detalles.</li>
-    <li><b>Vocoder:</b> Transforma el espectrograma en audio real (onda sonora).</li>
+    <li><b>Vocoder:</b> Transforma el espectrograma en audio real.</li>
   </ol>
 </div>
 
@@ -63,12 +63,12 @@ Para superar la **lentitud** de los modelos en cascada, surgieron arquitecturas 
   <img src="img/FastSpeech2.png" alt="Arquitectura Tacotron 2">
 
   <ol class="text-col">
-    <li><b>Texto de entrada:</b> Se ingresa el texto que queremos convertir en voz (por ejemplo: “Hola, ¿cómo estás?”).</li>
+    <li><b>Texto de entrada:</b> Se ingresa el texto que queremos convertir en voz.</li>
     <li><b>Codificador Transformer:</b> Convierte el texto (en fonemas o caracteres) en representaciones numéricas que contienen la información lingüística y prosódica (cómo debería sonar cada parte).</li>
     <li><b>Predictor de duración:</b> Aprende cuánto debe durar cada fonema. Esto permite que el modelo sepa cuánto tiempo debe sonar cada sonido.</li>
     <li><b>Predictor de tono (F0) y energía:</b> Determinan cómo debe variar la altura de la voz (entonación) y la intensidad (fuerza) del sonido. Así el modelo puede expresar emociones o naturalidad.</li>
     <li><b>Generador de espectrograma mel:</b> Con toda esa información (texto + duración + tono + energía), el modelo genera un espectrograma Mel, una representación visual del sonido.</li>
-    <li><b>Vocoder:</b> Convierte el espectrograma Mel en onda de audio, es decir, el sonido real de la voz.</li>
+    <li><b>Vocoder:</b> Convierte el espectrograma Mel en onda de audio.</li>
   </ol>
 </div>
 
@@ -98,12 +98,12 @@ Representan el **paradigma actual**. Estos modelos unifican todo el proceso en u
   <img src="img/VITS.png" alt="Arquitectura VITS">
 
   <ol class="text-col">
-    <li><b>Texto de entrada:</b></li> El modelo recibe el texto que se quiere convertir en voz (por ejemplo: “Hola, ¿cómo estás?”).</li>
+    <li><b>Texto de entrada:</b></li> El modelo recibe el texto que se quiere convertir en voz.</li>
     <li><b>Codificador de texto:</b></li> Convierte el texto en una representación numérica (vectores) que capturan cómo deberían sonar los fonemas y su ritmo.</li>
     <li><b>Predictor estocástico de duración:</b></li> Aprende cuánto debe durar cada fonema o sílaba en el audio, pero de forma probabilística, permitiendo que la voz suene más natural y variable.</li>
     <li><b>Flujo normalizador (Normalizing Flow):</b></li> Transforma las representaciones del texto en una distribución más parecida a la del audio real. Esto crea un espacio latente que conecta el texto con el sonido sin depender de alineaciones externas.</li>
-    <li><b>Generador (basado en HiFi-GAN):</b></li> A partir del espacio latente (ya ajustado por duración y flujo), el generador crea directamente la onda de audio — es decir, la voz sintética.</li>
-    <li><b>Codificador posterior y discriminador (solo en entrenamiento):</b></li> El codificador posterior aprende de audios reales para que el modelo entienda cómo deberían sonar. El discriminador (parte tipo GAN) diferencia entre audio real y generado, ayudando al modelo a sonar más natural.</li>
+    <li><b>Generador (basado en HiFi-GAN):</b></li> A partir del espacio latente (ya ajustado por duración y flujo), el generador crea directamente la voz sintética.</li>
+    <!-- <li><b>Codificador posterior y discriminador (solo en entrenamiento):</b></li> El codificador posterior aprende de audios reales para que el modelo entienda cómo deberían sonar. El discriminador (parte tipo GAN) diferencia entre audio real y generado, ayudando al modelo a sonar más natural.</li> -->
   </ol>
 </div>
 
