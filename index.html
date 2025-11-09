@@ -298,6 +298,38 @@
 		// More info about initialization & config:
 		// - https://revealjs.com/initialization/
 		// - https://revealjs.com/config/
+		const RAINBOW = ["#ff0000", "#ffff00", "#00ff00", "#00ffff"];
+
+		const GREETING = [
+			" ███████████                                   ███      █████                      ███          ",
+			"░░███░░░░░███                                 ░░░      ░░███                     ███░           ",
+			" ░███    ░███  ██████  ████████   █████ █████ ████   ███████   ██████          ███░     ██████  ",
+			" ░██████████  ███░░███░░███░░███ ░░███ ░░███ ░░███  ███░░███  ███░░███       ███░      ░░░░░███ ",
+			" ░███░░░░░███░███████  ░███ ░███  ░███  ░███  ░███ ░███ ░███ ░███ ░███     ███░         ███████ ",
+			" ░███    ░███░███░░░   ░███ ░███  ░░███ ███   ░███ ░███ ░███ ░███ ░███   ███░          ███░░███ ",
+			" ███████████ ░░██████  ████ █████  ░░█████    █████░░████████░░██████  ███░           ░░████████",
+			"░░░░░░░░░░░   ░░░░░░  ░░░░ ░░░░░    ░░░░░    ░░░░░  ░░░░░░░░  ░░░░░░  ░░░              ░░░░░░░░ ",
+		];
+
+		const WELCOME = `Boas a casualidade verte por acá xa que non ten esto moitas vistas de volverse una páxina publica e notoria.
+Xe chegaste e estas a leer esto, unha de tres: eu che pasei o enlace, eres un profe do tribunal con curiosidade ou causalidades da vida.
+Profe do tribunal? Efectivamente leiches bem, esto e a plantilla para a defensa do meu proxecto fin de grado, o traballo en cuestion vai
+sobre unha ferramenta de línea de comandos para a xestión de de modelos de procesamento de texto a audio, se chegaste ata aquí por o caso terceiro
+casualidad e logo leiches esto porque eres curioso podes transformar a túa casulidad en causalidad e botar un ollo o repositorio deta ferramenta
+word2speech https://github.com/adecora/proyecto-dislexia.
+
+Moitas grazas!!!
+`;
+		document.addEventListener("DOMContentLoaded", () => {
+			GREETING.forEach((line, i) => {
+				let color = RAINBOW[i % RAINBOW.length];
+
+				console.log(`%c${line}`, `color: ${color}; font-family: monospace;`);
+			})
+
+			console.log(WELCOME);
+		});
+
 		Reveal.initialize({
 			hash: true,
 
