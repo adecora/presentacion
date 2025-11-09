@@ -1,40 +1,343 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+	<title>word2speech</title>
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
+	<link rel="icon" href="img/favicon.ico">
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/white.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+
+	<style>
+		/* === Header fijo === */
+		#header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 80px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background: #002B5E;
+			color: white;
+			padding: 0 40px;
+			z-index: 1000;
+			font-family: "Helvetica Neue", sans-serif;
+			font-size: 20px;
+		}
+
+		#header img {
+			height: 80px;
+		}
+
+		#header-center {
+			flex: 1;
+			text-align: center;
+			font-weight: 600;
+			font-size: 25px;
+		}
+
+		footer {
+			position: fixed;
+			padding-top: 10px;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 30px;
+			background-color: #002B5E;
+			color: white;
+			text-align: center;
+			font-weight: bold;
+		}
+
+
+		/* Estilos específicos del título */
+		.slides{
+			font-size: 30px;
+		}
+
+		.tfg-title {
+			font-size: 40px;
+			font-weight: 700;
+			text-transform: uppercase;
+			line-height: 1.1;
+		}
+
+		.tfg-block {
+			margin-top: 60px;
+			font-size: 30px;
+			font-weight: 700;
+		}
+
+		.tfg-block span {
+			font-weight: 700;
+		}
+
+		.tfg-footer {
+			margin-top: 40px;
+			font-size: 24px;
+		}
+
+		.reveal .slides section[data-state="small-tables"] table {
+			font-size: 0.5em;
+			width: auto;
+			margin: 0 auto;
+		}
+
+		.reveal .slides section[data-header="Arquitectura de word2speech"] section:nth-child(3) li code {
+			font-size: 0.6em;
+		}
+
+		.reveal .split-code {
+			display: flex;
+			gap: 1.5em;        /* separación entre bloques */
+			justify-content: space-between;
+		}
+
+		.reveal .split-code pre {
+			width: 48%;         /* dos bloques del mismo tamaño */
+			font-size: 0.55em;  /* reduce un poco el texto si hace falta */
+			box-sizing: border-box;
+			}
+
+		.img-grid {
+			display: flex;
+			gap: 20px;
+			justify-content: center;
+			align-items: center;
+		}
+
+		/* ocultamos los checkboxes */
+		.img-zoom-toggle {
+			display: none;
+		}
+
+		/* estilo base de las imágenes */
+		.img-zoom-label img {
+			border-radius: 10px;
+			cursor: zoom-in;
+			transition: transform 0.3s ease;
+		}
+
+		/* cuando el checkbox está marcado, mostramos la imagen en grande */
+		.img-zoom-toggle:checked + .img-zoom-label img {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) scale(0.8);
+			z-index: 1001;
+			box-shadow: 0 0 40px rgba(0,0,0,0.6);
+			cursor: zoom-out;
+		}
+
+		/* fondo oscurecido cuando cualquiera esté marcado */
+		.img-grid:has(.img-zoom-toggle:checked)::before {
+			content: "";
+			position: fixed;
+			inset: 0;
+			background: rgba(0,0,0,0.75);
+			z-index: 1000;
+			pointer-events: none;
+		}
+
+		.img-grid:has(#img5:checked) label[for="img6"],
+		.img-grid:has(#img6:checked) label[for="img5"],
+		.img-grid:has(#img3:checked) label[for="img4"],
+		.img-grid:has(#img4:checked) label[for="img3"],
+		.img-grid:has(#img1:checked) label[for="img2"],
+		.img-grid:has(#img2:checked) label[for="img1"] {
+			display: none;
+		}
+
+		.split-slide {
+			display: flex;
+			gap: 1.5rem;
+			align-items: center;     /* no centramos vertical para que no crezca */
+		}
+
+		/* la imagen manda sólo hasta cierto punto */
+		.split-slide img {
+			max-width: 35%;              /* menos que 50% */
+			max-height: 55vh;            /* no más del 55% de la pantalla */
+			object-fit: contain;
+			border-radius: 8px;
+		}
+
+		/* el texto ocupa lo demás */
+		.split-slide .text-col {
+			flex: 1;
+			max-height: 60vh;            /* límite vertical para el texto */
+			overflow-y: auto;            /* si hay mucho, scroll */
+			font-size: 18px;
+			line-height: 1.4;
+			margin: 0;
+		}
+		/* Deja espacio arriba para que las slides no lo tapen */
+		/* .reveal .slides {
+				margin-top: 80px;
+			} */
+	</style>
+</head>
+
+<body>
+
+	<div id="header">
+		<img src="img/uma-logo.jpg" alt="Logo izquierda">
+		<div id="header-center">Título inicial</div>
+		<img src="img/etsit-logo.jpg" alt="Logo derecha">
+	</div>
+
+	<div class="reveal">
+		<div class="slides">
+			<section data-header="Trabajo Fin de Grado">
+				<h2 class="tfg-title">
+					GENERACIÓN DIGITAL DE AUDIO PARA EL TRATAMIENTO DE LA DISLEXIA
+				</h2>
+
+				<div class="tfg-block">
+					Realizado por: <span>Alejandro Varela de Cora</span><br>
+					Dirigido por: <span>Jorge Munilla Fajardo</span>
+				</div>
+
+				<div class="tfg-footer">
+					Ingeniería de Comunicaciones – UNIVERSIDAD DE MÁLAGA<br>
+					Málaga, 10 de Noviembre de 2025
+				</div>
+			</section>
+			<section data-markdown data-header="Índice de contenidos">
+				<script type="text/template">
+					1. Introducción
+					2. Objetivos del proyecto
+					3. Estado del Arte en Síntesis de Voz (TTS)
+					4. Arquitectura de word2speech
+					5. Demostración de Funcionalidades
+					6. Resultados y Validación Experimental
+					7. Conclusiones y Líneas Futuras
+				</script>
+			</section>
+
+			<section data-header="Introducción"
+						data-markdown="sections/introduccion.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Objetivos del proyecto"
+						data-markdown="sections/objetivos.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Estado del Arte en Síntesis de Voz (TTS)"
+						data-markdown="sections/estado-del-arte.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Arquitectura de word2speech"
+						data-markdown="sections/arquitectura.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Demostración de Funcionalidades"
+						data-markdown="sections/demostracion.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Resultados y Validación Experimental"
+						data-markdown="sections/resultados.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Conclusiones y Líneas Futuras"
+						data-markdown="sections/conclusiones.md"
+						data-separator="^\n\n\n"
+						data-separator-vertical="^\n\n"
+						data-separator-notes="^Note:"
+						data-charset="utf-8">
+			</section>
+
+			<section data-header="Preguntas">
+				<h1>¿Preguntas?</h1>
+			</section>
 		</div>
+	</div>
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+	<footer>Generación digital de audio para el tratamiento de la dislexia</footer>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			hash: true,
+
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+		});
+
+		// Inicialización de mermaid
+		mermaid.initialize({
+			startOnLoad: false,   // muy importante con Reveal
+			theme: "default"
+  	});
+
+
+		// Actualización del header
+		const headerCenter = document.getElementById('header-center');
+
+		const updateHeader = (event) => {
+			const currentSlide = event.currentSlide || Reveal.getCurrentSlide();
+			let newText = currentSlide.dataset.header;
+
+			if (!newText) {
+				const parentWithHeaders = currentSlide.closest('section[data-header]');
+				if (parentWithHeaders) {
+					newText = parentWithHeaders.dataset.header;
+				}
+			}
+
+			headerCenter.textContent = newText || '';
+		}
+
+		// Actualizar al cambiar de slide
+		Reveal.on('slidechanged', updateHeader);
+		// Al recargar
+		Reveal.on('ready', updateHeader);
+
+		// Renderizar mermaid
+		Reveal.on('ready', () => mermaid.run({ querySelector: '.mermaid' }));
+		Reveal.on('slidechanged', () => mermaid.run({ querySelector: '.mermaid' }));
+	</script>
+</body>
+
 </html>
