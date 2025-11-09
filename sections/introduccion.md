@@ -33,14 +33,4 @@ Este repositorio no podía adaptarse dinámicamente a:
 - Las necesidades **individuales de cada niño**
 - La **rápida evolución** de los ejercicios terapéuticos diseñados por especialistas
 
-
-## El Desafío Central
-
-**Evolucionar desde un repositorio estático a un sistema dinámico**
-
-El reto consistía en desarrollar una solución capaz de:
-- Generar **estímulos auditivos al instante**
-- **Centralizar** diferentes tecnologías de síntesis de voz (TTS)
-- **Comparar objetivamente** la calidad del audio generado
-
 Note: La dislexia requiere herramientas especializadas que permitan control prosódico preciso.
