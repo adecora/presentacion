@@ -4,15 +4,30 @@ Fundamentada por el gran avance de la **inteligencia artificial** en los último
 
 
 ## Paradigma en Cascada
-**Ejemplo: Tacotron 2**
+<a data-preview-link="img/Tacotron2.png" target="_blank"><strong>Tacotron 2</strong></a>
 
 Fue uno de los primeros enfoques neuronales robustos. **Separa el proceso** en dos etapas principales:
 
-- **Modelo acústico**: convierte texto en una representación intermedia (espectrograma de Mel)
-- **Vocoder**: sintetiza la forma de onda final a partir de esa representación
+1. **Modelo acústico**
+2. **Vocoder**
 
 
-<div class="split-slide">
+<!-- .slide: data-state="small-font" -->
+## Paradigma en Cascada
+<a data-preview-link="img/Tacotron2.png" target="_blank"><strong>Tacotron 2</strong></a>
+
+1. **Modelo Acústico (Red de Predicción de Características):**
+
+    Convierte una secuencia de texto (caracteres) en una representación acústica intermedia: un mel-espectrograma.
+
+    Utiliza un codificador recurrente para generar una representación oculta del texto. Un decodificador autorregresivo con un mecanismo de atención sensible a la ubicación consume esta representación para predecir el mel-espectrograma frame a frame.
+2. **Vocoder:**
+
+    Convierte el mel-espectrograma predicho en una forma de onda de audio.
+
+    Es un modelo generativo autorregresivo que sintetiza el audio frame a frame.
+
+<!-- <div class="split-slide">
   <img src="img/Tacotron2.png" alt="Arquitectura Tacotron 2">
 
   <ol class="text-col">
@@ -23,8 +38,7 @@ Fue uno de los primeros enfoques neuronales robustos. **Separa el proceso** en d
     <li><b>Post-net:</b> Mejora la calidad del espectrograma corrigiendo detalles.</li>
     <li><b>Vocoder:</b> Transforma el espectrograma en audio real.</li>
   </ol>
-</div>
-
+</div> -->
 Note: Paso 1: Entrada y Codificación del Texto
 El proceso comienza con la entrada de una secuencia de caracteres (el texto que se desea sintetizar).
 1. El Encoder: El texto es procesado por un codificador (encoder).
@@ -50,16 +64,27 @@ Es importante notar que el entrenamiento de Tacotron 2 se realiza en un proceso 
 
 
 ## Modelos No Autorregresivos
-<a data-preview-link="img/FastSpeech2.png"><strong>Ejemplo: FastSpeech 2</strong></a>
+<a data-preview-link="img/FastSpeech2.png"><strong>FastSpeech 2</strong></a>
 
 Para superar la **lentitud** de los modelos en cascada, surgieron arquitecturas no autorregresivas.
 
-- Generan **todos los frames** del espectrograma en **paralelo**
+- Genera **todos los frames** del espectrograma en **paralelo**
 - **Inferencia más rápida** y robusta
 - Evitan errores acumulativos como **repeticiones u omisiones**
 
 
-<div class="split-slide">
+<!-- .slide: data-state="small-font" -->
+## Modelos No Autorregresivos
+<a data-preview-link="img/FastSpeech2.png"><strong>FastSpeech 2</strong></a>
+
+El Adaptador de Varianza es un módulo que se inserta entre el codificador y el decodificador para enriquecer la secuencia de fonemas oculta con información de variabilidad explícita:
+
+- **Predictor de Duración:** Predice la duración de cada fonema, permitiendo que el modelo sea no autorregresivo.
+- **Predictor de Tono (Pitch):** Modela el contorno del tono a nivel de fotograma, lo que es crucial para una prosodia natural.
+- **Predictor de Energía:** Modela la magnitud a nivel de fotograma, lo que afecta directamente al volumen y la prosodia.
+
+Este enfoque resuelve el problema de **uno a muchos (un mismo texto puede ser hablado de muchas maneras)** al proporcionar al decodificador la información de variabilidad sin obligarlo a inferirla implícitamente.
+<!-- <div class="split-slide">
   <img src="img/FastSpeech2.png" alt="Arquitectura Tacotron 2">
 
   <ol class="text-col">
@@ -70,8 +95,7 @@ Para superar la **lentitud** de los modelos en cascada, surgieron arquitecturas 
     <li><b>Generador de espectrograma mel:</b> Con toda esa información (texto + duración + tono + energía), el modelo genera un espectrograma Mel, una representación visual del sonido.</li>
     <li><b>Vocoder:</b> Convierte el espectrograma Mel en onda de audio.</li>
   </ol>
-</div>
-
+</div> -->
 Note: Explicación del Flujo de FastSpeech 2 Paso a Paso:
 FastSpeech 2 opera en un modelo que predice directamente la duración y las características prosódicas, permitiendo la generación paralela y eliminando la latencia y los errores acumulativos de los modelos autorregresivos (como Tacotron 2).
 1. Encoder (Codificador): El texto (secuencia de caracteres o fonemas) es procesado por un Encoder basado en Transformer. Este codificador convierte la secuencia de texto en representaciones ocultas de alta dimensión.
@@ -85,7 +109,7 @@ FastSpeech 2 opera en un modelo que predice directamente la duración y las cara
 
 
 ## Arquitecturas End-to-End
-<a data-preview-link="img/VITS.png"><strong>Ejemplo: VITS</strong></a>
+<a data-preview-link="img/VITS.png"><strong>VITS</strong><br><div style="font-size:0.9em">(Variational Inference with adversarial learning for end-to-end Text-to-Speech)</div></a>
 
 Representan el **paradigma actual**. Estos modelos unifican todo el proceso en una **única red neuronal** entrenada de principio a fin.
 
@@ -94,7 +118,17 @@ Representan el **paradigma actual**. Estos modelos unifican todo el proceso en u
 - **Calidad excepcional** con **latencia muy baja**
 
 
-<div class="split-slide">
+<!-- .slide: data-state="small-font" -->
+## Arquitecturas End-to-End
+<a data-preview-link="img/VITS.png"><strong>VITS</strong><br><div style="font-size:0.9em">(Variational Inference with adversarial learning for end-to-end Text-to-Speech)</div></a>
+
+En lugar de mapear texto a espectrograma y luego a onda, VITS aprende a mapear texto a una **distribución de variables latentes (z)**, y de ahí directamente a una forma de onda. Esto elimina la dependencia de una representación intermedia fija como el mel-espectrograma
+
+**Alineación y Variabilidad:**
+
+- **Monotonic Alignment Search (MAS):** VITS utiliza MAS para encontrar la alineación óptima entre el texto y la representación latente.
+- **Predictor de Duración Estocástico:** A diferencia del predictor determinista de FastSpeech 2, VITS utiliza un predictor basado en flujo que modela la distribución de las duraciones. Esto permite generar habla con ritmos diversos a partir del mismo texto, capturando mejor la naturalidad del habla humana.
+<!-- <div class="split-slide">
   <img src="img/VITS.png" alt="Arquitectura VITS">
 
   <ol class="text-col">
@@ -103,12 +137,22 @@ Representan el **paradigma actual**. Estos modelos unifican todo el proceso en u
     <li><b>Predictor estocástico de duración:</b></li> Aprende cuánto debe durar cada fonema o sílaba en el audio, pero de forma probabilística, permitiendo que la voz suene más natural y variable.</li>
     <li><b>Flujo normalizador (Normalizing Flow):</b></li> Transforma las representaciones del texto en una distribución más parecida a la del audio real. Esto crea un espacio latente que conecta el texto con el sonido sin depender de alineaciones externas.</li>
     <li><b>Generador (basado en HiFi-GAN):</b></li> A partir del espacio latente (ya ajustado por duración y flujo), el generador crea directamente la voz sintética.</li>
-    <!-- <li><b>Codificador posterior y discriminador (solo en entrenamiento):</b></li> El codificador posterior aprende de audios reales para que el modelo entienda cómo deberían sonar. El discriminador (parte tipo GAN) diferencia entre audio real y generado, ayudando al modelo a sonar más natural.</li> -->
   </ol>
-</div>
+</div> -->
 
 Note: Resumen del Proceso de VITS:
 1. Codificador de Texto: Convierte el texto de entrada en representaciones locales con contexto.
 2. Mapeo Texto a Audio: Esta etapa, que incluye un predictor de duraciones y funciones flows (funciones invertibles y diferenciables), gestiona el alineamiento.
 3. Predicción Estocástica de Duraciones: VITS utiliza esta técnica en lugar de un decoder autorregresivo. Aprende una distribución de posibles duraciones (a partir de ruido gaussiano simple transformado por un flow) para cada token. Esto introduce variación natural en el ritmo y la entonación.
 4. Generador Neuronal: La secuencia de texto expandida (ajustada a la duración predicha) alimenta un generador tipo HiFi-GAN/WaveNet. Este bloque sintetiza la forma de onda final, optimizado mediante pérdidas adversarias GAN
+
+
+<!-- .slide: data-state="small-tables" -->
+| **Característica**            | **Tacotron 2**                                                    | **FastSpeech 2**                                                                            | **VITS**                                                                                                                                  |
+| ----------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Paradigma General**         | Secuencia a Secuencia (Seq2Seq), Autorregresivo, en dos etapas.   | No autorregresivo, Feed-Forward.                                                            | Autoencoder Variacional (VAE), Adversario, End-to-End, Paralelo.                                                                          |
+| **Representación Intermedia** | Mel-espectrograma.     | Mel-espectrograma.                                                                          | Variable latente *z*. |
+| **Proceso de Entrenamiento**  | Dos modelos (acústico y vocoder) entrenados por separado.         | Un único modelo, pero con tareas separadas (predicción de varianza, decodificación de mel). | Un único modelo unificado.                                                     |
+| **Generación de Audio**       | Un vocoder WaveNet autorregresivo separado.                       | Un vocoder separado.                                                                        | Un decodificador integrado (generador tipo HiFi-GAN) que es parte del VAE.                                                                |
+| **Manejo de la Alineación**   | Mecanismo de atención recurrente sensible a la ubicación.         | Predictor de duración explícito entrenado con alineación forzada (MFA).                     | Búsqueda de Alineación Monótona (MAS) integrada en el marco VAE.                                                                          |
+| **Manejo de la Variabilidad** | Mecanismo de atención y el modelo autorregresivo. |  Adaptador de Varianza (tono, energía, duración).                     |  VAE y al Predictor de Duración Estocástico basado en flujo.                                                           |
