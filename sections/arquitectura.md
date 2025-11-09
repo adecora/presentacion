@@ -418,7 +418,7 @@ class ParlerModel(TTSModel):
 </div>
 
 
-**plugins/__init__.py**
+**plugins/\_\_init\_\_.py**
 
 ```py
 def discover_models():

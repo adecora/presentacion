@@ -100,7 +100,6 @@ Un prosodia más calmada y relajada
 </div>
 
 
-
 ### **Resultados MOS por Modelo**
 
 | Modelo         | Media | Mediana | Mínimo | Máximo | Desviación |

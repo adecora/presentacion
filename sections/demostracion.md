@@ -1,6 +1,3 @@
-La arquitectura de **word2speech** se materializa en un conjunto de comandos potentes y fáciles de usar.
-
-
 ## 1. Instalación y primeros pasos
 
 Utilizamos el comando <a data-preview-video="assets/installation.mp4"><strong><code>pipx</code></strong></a> para instalar **word2speech** en un entorno aislado de la configuración global de python
